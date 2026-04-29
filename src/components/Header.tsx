@@ -1,16 +1,14 @@
 import { Home, Info, Users, HelpCircle } from "lucide-react";
 import { NavLink } from "./ui/NavLink";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Header() {
-  const location = useLocation();
-
   const menuItems = [
-    { label: "Beranda", href: "/", icon: <Home size={18} /> },
-    { label: "Competition", href: "/competition", icon: <Info size={18} /> },
-    { label: "Seminar", href: "/seminar", icon: <Users size={18} /> },
-    { label: "Workshop", href: "/workshop", icon: <HelpCircle size={18} /> },
-    { label: "Talkshow", href: "/talkshow", icon: <HelpCircle size={18} /> },
+    { label: "Beranda", to: "/", icon: <Home size={18} /> },
+    { label: "Competition", to: "/competition", icon: <Info size={18} /> },
+    { label: "Seminar", to: "/seminar", icon: <Users size={18} /> },
+    { label: "Workshop", to: "/workshop", icon: <HelpCircle size={18} /> },
+    { label: "Talkshow", to: "/talkshow", icon: <HelpCircle size={18} /> },
   ];
 
   return (
@@ -32,14 +30,13 @@ export default function Header() {
             <NavLink
               key={item.label}
               label={item.label}
-              href={item.href}
+              to={item.to}
               icon={item.icon}
-              isActive={location.pathname === item.href}
             />
           ))}
         </div>
 
-        {/* LOGIN BUTTON */}
+        {/* Login Button */}
         <Link
           to="/login"
           className="bg-red-900 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition"

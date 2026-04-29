@@ -1,26 +1,28 @@
+import { NavLink as RouterNavLink } from "react-router-dom";
+
 interface NavLinkProps {
   label: string;
-  href: string;
+  to: string;
   icon?: React.ReactNode;
-  isActive?: boolean;
 }
+
 export const NavLink: React.FC<NavLinkProps> = ({
   label,
-  href,
+  to,
   icon,
-  isActive = false,
 }) => {
-  const activeStyle = "text-gray-900";
-  const defaultStyle = "text-slate-600 hover:text-red-900";
   return (
-    <a
-      href={href}
-      className={`flex items-center gap-2 px-4 py-2 font-medium transition-all duration-200 ${
-        isActive ? activeStyle : defaultStyle
-      }`}
+    <RouterNavLink
+      to={to}
+      className={({ isActive }) =>
+        `flex items-center gap-2 px-4 py-2 font-medium transition-all duration-200 ${isActive
+          ? "text-gray-900"
+          : "text-slate-600 hover:text-red-900"
+        }`
+      }
     >
       {icon && <span className="w-5 h-5">{icon}</span>}
       <span>{label}</span>
-    </a>
+    </RouterNavLink>
   );
 };
