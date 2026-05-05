@@ -8,6 +8,13 @@ import Workshop from "./pages/Workshop";
 import Talkshow from "./pages/Talkshow";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import DashboardIndex from "./pages/dashboard/DashboardIndex";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import DashboardLayout from "./layouts/DashboardLayout";
+import CategoryIndex from "./pages/dashboard/category/CategoryIndex";
+import CategoryCreate from "./pages/dashboard/category/CategoryCreate";
+import PembicaraIndex from "./pages/dashboard/pembicara/PembicaraIndex";
+import EventIndex from "./pages/dashboard/event/EventIndex";
 
 function App() {
   return (
@@ -24,6 +31,20 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Route>
+
+      //halaman yang diakses setelah login
+        <Route element={<ProtectedRoute />}>
+          <Route element= {<DashboardLayout />}>
+            <Route path="/dashboard" element={<DashboardIndex />} />
+
+            <Route path="/dashboard/category" element={<CategoryIndex />} />
+            <Route path="/dashboard/category/create" element={<CategoryCreate />} />
+
+            <Route path="/dashboard/pembicara" element={<PembicaraIndex />} />
+
+            <Route path="/dashboard/event" element={<EventIndex />} />
+          </Route>
+        </Route>
     </Routes>
   );
 }
