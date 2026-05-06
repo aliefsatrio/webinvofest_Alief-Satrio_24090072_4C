@@ -2,6 +2,7 @@ interface ButtonProps {
   label: string;
   variant?: "primary" | "outline";
   className?: string;
+  type?: "button" | "submit";
   onClick?: () => void;
 }
 

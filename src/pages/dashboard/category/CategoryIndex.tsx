@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
 
-export default function DashboardIndex() {
+export default function CategoryIndex() {
   return (
-    <div>
-      <h1>Category</h1>
-      <p>Selamat Datang di halaman Category</p>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Kategori</h1>
+      <p>Daftar kategori yang tersedia.</p>
 
       <Link
         to="/dashboard/category/create"
-        className="p-2 bg-red-500 text-white rounded"
+        className="mt-4 inline-block px-4 py-2 bg-red-600 text-white rounded"
       >
-        Tambah Category
+        Tambah Kategori
       </Link>
     </div>
   );

@@ -15,6 +15,8 @@ import CategoryIndex from "./pages/dashboard/category/CategoryIndex";
 import CategoryCreate from "./pages/dashboard/category/CategoryCreate";
 import PembicaraIndex from "./pages/dashboard/pembicara/PembicaraIndex";
 import EventIndex from "./pages/dashboard/event/EventIndex";
+import EventCreate from "./pages/dashboard/event/EventCreate";
+import PembicaraCreate from "./pages/dashboard/pembicara/PembicaraCreate";
 
 function App() {
   return (
@@ -41,8 +43,10 @@ function App() {
             <Route path="/dashboard/category/create" element={<CategoryCreate />} />
 
             <Route path="/dashboard/pembicara" element={<PembicaraIndex />} />
+            <Route path="/dashboard/pembicara/create" element={<PembicaraCreate />} />
 
             <Route path="/dashboard/event" element={<EventIndex />} />
+            <Route path="/dashboard/event/create" element={<EventCreate />} />
           </Route>
         </Route>
     </Routes>

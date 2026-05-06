@@ -1,19 +1,32 @@
-import { forwardRef } from 'react';
+import type { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps<T extends FieldValues> {
   label: string;
+  nama: Path<T>;
   error?: string;
+  register: UseFormRegister<T>;
+  type?: string;
+  placeholder?: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, ...props }, ref) => (
-  <div className="flex flex-col gap-1 w-full text-left">
-    <label className="text-sm font-semibold text-gray-700">{label}</label>
-    <input
-      ref={ref}
-      className={`px-4 py-2 border rounded-lg outline-none focus:ring-2 ${error ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-blue-100'
-        }`}
-      {...props}
-    />
-    {error && <span className="text-xs text-red-500">{error}</span>}
-  </div>
-));
+export const Input = <T extends FieldValues>({
+  label,
+  nama,
+  error,
+  register,
+  type = "text",
+  placeholder,
+}: InputProps<T>) => {
+  return (
+    <div className="flex flex-col gap-1 mb-3">
+      <label className="font-medium">{label}</label>
+      <input
+        type={type}
+        {...register(nama)}
+        placeholder={placeholder}
+        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+    </div>
+  );
+};
