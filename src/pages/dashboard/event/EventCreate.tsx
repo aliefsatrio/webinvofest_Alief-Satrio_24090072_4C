@@ -1,65 +1,280 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
+import api from "../../../api/axios";
+import { useNavigate } from "react-router-dom";
 
 type FormData = {
-  eventName: string;
-  speaker: string;
-  date: string;
-  time: string;
+  name: string;
+  categoryId: number;
+  pembicaraId: number;
+  location: string;
+  dateEvent: string;
+  description: string;
 };
 
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface Pembicara {
+  id: number;
+  name: string;
+}
+
 export default function EventCreate() {
+
+  const navigate = useNavigate();
+
+  const [categories, setCategories] =
+    useState<Category[]>([]);
+
+  const [pembicaras, setPembicaras] =
+    useState<Pembicara[]>([]);
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log("Data event:", data);
-    alert("Event berhasil dibuat!");
+  // GET CATEGORY + PEMBICARA
+  useEffect(() => {
+
+    const fetchData = async () => {
+
+      try {
+
+        const categoryResponse =
+          await api.get("/categories");
+
+        const pembicaraResponse =
+          await api.get("/pembicara");
+
+        setCategories(categoryResponse.data);
+
+        setPembicaras(pembicaraResponse.data);
+
+      } catch (error) {
+
+        console.log(error);
+
+        alert("Gagal mengambil data");
+
+      }
+
+    };
+
+    fetchData();
+
+  }, []);
+
+  // CREATE EVENT
+  const onSubmit = async (
+    data: FormData
+  ) => {
+
+    try {
+
+      await api.post(
+        "/events",
+        {
+          name: data.name,
+
+          categoryId:
+            Number(data.categoryId),
+
+          pembicaraId:
+            Number(data.pembicaraId),
+
+          location:
+            data.location,
+
+          // FIX DATE
+          dateEvent:
+            new Date(data.dateEvent),
+
+          description:
+            data.description,
+        }
+      );
+
+      alert("Event berhasil dibuat!");
+
+      reset();
+
+      navigate("/dashboard/event");
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Gagal create event");
+
+    }
+
   };
 
   return (
-    <div className="p-6 flex justify-center items-start min-h-screen">
-      <div className="bg-white p-6 rounded-lg shadow-md w-96 border">
-        {/* Title */}
-        <h2 className="text-lg font-semibold mb-4">
+
+    <div className="p-6 flex justify-center">
+
+      <div className="bg-white p-6 rounded-lg shadow-md w-125 border">
+
+        <h2 className="text-2xl font-semibold mb-4">
           Add New Event
         </h2>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
+
+          {/* NAMA */}
           <Input
             label="Nama Event"
-            nama="eventName"
+            nama="name"
             register={register}
-            error={errors.eventName?.message}
+            rules={{
+              required: "Nama event wajib diisi"
+            }}
+            error={errors.name?.message}
           />
 
-          <Input
-            label="Pembicara"
-            nama="speaker"
-            register={register}
-            error={errors.speaker?.message}
-          />
-
+          {/* CATEGORY */}
           <div>
-            <label className="block text-sm mb-1">Tanggal</label>
-            <input
-              type="date"
-              {...register("date")}
+
+            <label className="block mb-1 font-medium">
+              Category
+            </label>
+
+            <select
+              {...register("categoryId", {
+                required: "Category wajib dipilih"
+              })}
               className="w-full border rounded px-3 py-2"
-            />
+            >
+
+              <option value="">
+                -- Pilih Category --
+              </option>
+
+              {categories.map((category) => (
+
+                <option
+                  key={category.id}
+                  value={category.id}
+                >
+                  {category.name}
+                </option>
+
+              ))}
+
+            </select>
+
+            {errors.categoryId && (
+
+              <p className="text-red-500 text-sm">
+                {errors.categoryId.message}
+              </p>
+
+            )}
+
           </div>
 
+          {/* PEMBICARA */}
           <div>
-            <label className="block text-sm mb-1">Jam</label>
+
+            <label className="block mb-1 font-medium">
+              Pembicara
+            </label>
+
+            <select
+              {...register("pembicaraId", {
+                required: "Pembicara wajib dipilih"
+              })}
+              className="w-full border rounded px-3 py-2"
+            >
+
+              <option value="">
+                -- Pilih Pembicara --
+              </option>
+
+              {pembicaras.map((pembicara) => (
+
+                <option
+                  key={pembicara.id}
+                  value={pembicara.id}
+                >
+                  {pembicara.name}
+                </option>
+
+              ))}
+
+            </select>
+
+            {errors.pembicaraId && (
+
+              <p className="text-red-500 text-sm">
+                {errors.pembicaraId.message}
+              </p>
+
+            )}
+
+          </div>
+
+          {/* LOKASI */}
+          <Input
+            label="Lokasi"
+            nama="location"
+            register={register}
+            rules={{
+              required: "Lokasi wajib diisi"
+            }}
+            error={errors.location?.message}
+          />
+
+          {/* TANGGAL */}
+          <div>
+
+            <label className="block mb-1 font-medium">
+              Tanggal Event
+            </label>
+
             <input
-              type="time"
-              {...register("time")}
+              type="datetime-local"
+              {...register("dateEvent", {
+                required: "Tanggal wajib diisi"
+              })}
               className="w-full border rounded px-3 py-2"
             />
+
+            {errors.dateEvent && (
+
+              <p className="text-red-500 text-sm">
+                {errors.dateEvent.message}
+              </p>
+
+            )}
+
+          </div>
+
+          {/* DESCRIPTION */}
+          <div>
+
+            <label className="block mb-1 font-medium">
+              Description
+            </label>
+
+            <textarea
+              {...register("description")}
+              rows={4}
+              className="w-full border rounded px-3 py-2"
+            />
+
           </div>
 
           <Button
@@ -68,8 +283,13 @@ export default function EventCreate() {
             variant="primary"
             className="w-full"
           />
+
         </form>
+
       </div>
+
     </div>
+
   );
+
 }

@@ -10,20 +10,21 @@ export default function Login() {
   const login = useAuthStore((state) => state.login);
 
   const [data, setData] = useState({
-    email: "",
+    nim: "",
     password: "",
   });
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (data.email == "hostg225566@gmail.com" && data.password == "admin123") {
+    // LOGIN DUMMY
+    if (data.nim === "24090072" && data.password === "admin123") {
       alert("Login Berhasil");
 
-      login(data.email);
+      login(data.nim);
       navigate("/dashboard");
     } else {
-      alert("Email atau password anda salah");
+      alert("NIM atau password anda salah");
     }
   };
 
@@ -32,7 +33,7 @@ export default function Login() {
       <div className="bg-white rounded-xl shadow-md overflow-hidden flex max-w-4xl w-full">
 
         {/* LEFT */}
-        <div className="hidden md:flex w-1/2 from-red-100 to-red-200 items-center justify-center p-6">
+        <div className="hidden md:flex w-1/2 items-center justify-center p-6">
           <img
             src="https://www.invofest-harkatnegeri.com/assets/Maskot-Hero.png"
             alt="login"
@@ -47,34 +48,45 @@ export default function Login() {
           </h1>
 
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
+
+            {/* INPUT NIM */}
             <input
-              type="email"
-              placeholder="Email"
-              className="border p-3 rounded-lg"
-              value={data.email}
+              type="text"
+              placeholder="Masukkan NIM"
+              className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300"
+              value={data.nim}
               onChange={(e) =>
-                setData({ ...data, email: e.target.value })
+                setData({ ...data, nim: e.target.value })
               }
+              required
             />
 
+            {/* INPUT PASSWORD */}
             <input
               type="password"
-              placeholder="Password"
-              className="border p-3 rounded-lg"
+              placeholder="Masukkan Password"
+              className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300"
               value={data.password}
               onChange={(e) =>
                 setData({ ...data, password: e.target.value })
               }
+              required
             />
 
+            {/* BUTTON */}
             <Button label="Masuk" variant="primary" />
 
+            {/* REGISTER */}
             <p className="text-sm text-center text-gray-600">
               Belum punya akun?{" "}
-              <Link to="/register" className="text-red-900 font-semibold">
+              <Link
+                to="/register"
+                className="text-red-900 font-semibold"
+              >
                 Registrasi Sekarang
               </Link>
             </p>
+
           </form>
         </div>
 

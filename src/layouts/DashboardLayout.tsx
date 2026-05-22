@@ -1,73 +1,186 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import {
+    NavLink,
+    Outlet,
+    useNavigate
+} from "react-router-dom";
+
 import { useAuthStore } from "../store/useAuthStore";
 
 export default function DashboardLayout() {
-    const logout = useAuthStore((state) => state.logout);
-    const navigate = useNavigate();
+
+    const logout =
+        useAuthStore((state) => state.logout);
+
+    const navigate =
+        useNavigate();
 
     const handleLogout = () => {
+
         logout();
-        // redirect ke halaman login setelah logout
+
         navigate("/login");
+
     };
 
+    const menuClass = ({ isActive }: {
+        isActive: boolean;
+    }) => `
+
+        px-5 py-4 rounded-2xl
+        font-semibold text-[15px]
+        transition-all duration-300
+
+        border border-white/10
+
+        ${isActive
+            ? `
+                bg-white text-red-700
+                shadow-lg
+              `
+            : `
+                bg-white/5 text-white
+                hover:bg-white/15
+                hover:translate-x-1
+              `
+        }
+
+    `;
+
     return (
-        <div className="flex w-full min-h-screen">
-            <aside className="w-64 bg-linear-to-b from-red-700 to-red-900 text-white flex flex-col justify-between p-5 shadow-2xl">
+
+        <div className="flex min-h-screen bg-red-50">
+
+            {/* SIDEBAR */}
+            <aside
+                className="
+                    w-72 sticky top-0 h-screen
+                    bg-gradient-to-b
+                    from-red-700
+                    via-red-800
+                    to-red-900
+
+                    text-white
+                    flex flex-col justify-between
+
+                    px-5 py-6
+                    shadow-xl
+                "
+            >
+
                 <div>
-                    {/* Logo / Title */}
-                    <div className="flex items-center justify-center border-b border-white/10 pb-5">
-                        <h2 className="text-3xl font-extrabold tracking-wide">
+
+                    {/* LOGO */}
+                    <div
+                        className="
+                            flex items-center justify-center
+                            pb-6 mb-8
+                            border-b border-white/10
+                        "
+                    >
+
+                        <h2
+                            className="
+                                text-4xl font-extrabold
+                                tracking-wide
+                            "
+                        >
                             Invofest
                         </h2>
+
                     </div>
 
-                    {/* Navigation */}
-                    <nav className="flex flex-col gap-3 mt-6">
-                        <Link
+                    {/* MENU */}
+                    <nav className="flex flex-col gap-4">
+
+                        <NavLink
                             to="/dashboard"
-                            className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/15 hover:translate-x-1 transition-all duration-200"
+                            end
+                            className={menuClass}
                         >
                             Dashboard
-                        </Link>
+                        </NavLink>
 
-                        <Link
+                        <NavLink
                             to="/dashboard/category"
-                            className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/15 hover:translate-x-1 transition-all duration-200"
+                            className={menuClass}
                         >
                             Kategori Event
-                        </Link>
+                        </NavLink>
 
-                        <Link
+                        <NavLink
                             to="/dashboard/event"
-                            className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/15 hover:translate-x-1 transition-all duration-200"
+                            className={menuClass}
                         >
                             Event
-                        </Link>
+                        </NavLink>
 
-                        <Link
+                        <NavLink
                             to="/dashboard/pembicara"
-                            className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/15 hover:translate-x-1 transition-all duration-200"
+                            className={menuClass}
                         >
                             Pembicara
-                        </Link>
+                        </NavLink>
+
+                        <NavLink
+                            to="/dashboard/biodata"
+                            className={menuClass}
+                        >
+                            Biodata
+                        </NavLink>
+
                     </nav>
+
                 </div>
 
-                {/* Logout */}
-                <div className="pt-5 border-t border-white/10">
+                {/* LOGOUT */}
+                <div className="pt-6 border-t border-white/10">
+
                     <button
                         onClick={handleLogout}
                         type="button"
-                        className="w-full py-3 rounded-xl bg-white text-red-700 font-semibold hover:bg-red-100 transition-all duration-200"
+                        className="
+                            w-full py-4
+                            rounded-2xl
+
+                            bg-white text-red-700
+                            font-bold text-lg
+
+                            hover:bg-red-100
+                            hover:scale-[1.01]
+
+                            transition-all duration-300
+                            shadow-lg
+                        "
                     >
                         Logout
                     </button>
+
                 </div>
+
             </aside>
-            <main>
-                <Outlet />
+
+            {/* CONTENT */}
+            <main
+                className="
+                    flex-1 min-h-screen
+
+                    bg-gradient-to-br
+                    from-red-50
+                    via-white
+                    to-red-100
+                "
+            >
+
+                <div className="w-full h-full">
+
+                    <Outlet />
+
+                </div>
+
             </main>
+
         </div>
+
     );
+
 }

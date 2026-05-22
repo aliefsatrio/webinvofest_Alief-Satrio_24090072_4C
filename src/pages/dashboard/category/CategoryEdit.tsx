@@ -1,23 +1,50 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
+import { useNavigate, useParams } from "react-router-dom";
+
 import api from "../../../api/axios";
-import { useNavigate } from "react-router-dom";
+import { Input } from "../../../components/ui/Input";
+import { Button } from "../../../components/ui/Button";
 
 type FormData = {
   name: string;
 };
 
-export default function CategoryCreate() {
+export default function CategoryEdit() {
+
+  const { id } = useParams();
 
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
-    reset,
+    setValue,
     formState: { errors },
   } = useForm<FormData>();
+
+  useEffect(() => {
+
+    const getCategory = async () => {
+
+      try {
+
+        const response =
+          await api.get(`/categories/${id}`);
+
+        setValue("name", response.data.name);
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+    getCategory();
+
+  }, [id, setValue]);
 
   const onSubmit = async (
     data: FormData
@@ -25,14 +52,12 @@ export default function CategoryCreate() {
 
     try {
 
-      await api.post(
-        "/categories",
+      await api.put(
+        `/categories/${id}`,
         data
       );
 
-      alert("Kategori berhasil dibuat!");
-
-      reset();
+      alert("Category berhasil diupdate");
 
       navigate("/dashboard/category");
 
@@ -40,7 +65,7 @@ export default function CategoryCreate() {
 
       console.log(error);
 
-      alert("Gagal create category");
+      alert("Gagal update category");
 
     }
 
@@ -50,11 +75,11 @@ export default function CategoryCreate() {
 
     <div className="p-6 flex justify-center">
 
-      <div className="bg-white p-6 rounded-lg shadow-md w-96 border">
+      <div className="bg-white p-6 rounded-lg shadow w-96">
 
-        <h2 className="text-2xl font-semibold mb-4">
-          Add New Category
-        </h2>
+        <h1 className="text-2xl font-bold mb-4">
+          Edit Category
+        </h1>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -72,7 +97,7 @@ export default function CategoryCreate() {
           />
 
           <Button
-            label="+ Simpan"
+            label="Update"
             type="submit"
             variant="primary"
             className="w-full"
