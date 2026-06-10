@@ -26,6 +26,9 @@ import EventCreate from "./pages/dashboard/event/EventCreate";
 import CategoryEdit from "./pages/dashboard/category/CategoryEdit";
 import EventEdit from "./pages/dashboard/event/EventEdit";
 import BiodataIndex from "./pages/dashboard/Biodata/BiodataIndex";
+import UserIndex from "./pages/dashboard/user/UserIndex";
+import UserCreate from "./pages/dashboard/user/UserCreate";
+import UserEdit from "./pages/dashboard/user/UserEdit";
 
 function App() {
   return (
@@ -108,6 +111,18 @@ function App() {
             path="/dashboard/biodata"
             element={<BiodataIndex />}
           />
+
+          <Route 
+            path="/dashboard/user" 
+            element={<UserIndex />} />
+
+          <Route 
+            path="/dashboard/user/create" 
+            element={<UserCreate />} />
+
+          <Route 
+            path="/dashboard/user/edit/:id" 
+            element={<UserEdit />} />
 
         </Route>
 

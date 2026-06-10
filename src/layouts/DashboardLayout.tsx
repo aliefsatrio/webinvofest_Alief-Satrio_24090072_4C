@@ -128,6 +128,13 @@ export default function DashboardLayout() {
                             Biodata
                         </NavLink>
 
+                        <NavLink
+                            to="/dashboard/user"
+                            className={menuClass}
+                        >
+                            User
+                        </NavLink>
+
                     </nav>
 
                 </div>

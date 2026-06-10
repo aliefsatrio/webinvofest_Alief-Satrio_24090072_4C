@@ -3,28 +3,37 @@ import Button from "../components/ui/Button";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuthStore } from "../store/useAuthStore";
+import api from "../api/axios";
 
 export default function Login() {
   const navigate = useNavigate();
-
   const login = useAuthStore((state) => state.login);
 
-  const [data, setData] = useState({
-    nim: "",
-    password: "",
-  });
+  const [data, setData] = useState({ email: "", password: "" }); // ← nim → email
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
 
-    // LOGIN DUMMY
-    if (data.nim === "24090072" && data.password === "admin123") {
-      alert("Login Berhasil");
+    try {
+      const response = await api.post("/auth/login", { // ← /auth/login
+        email: data.email,
+        password: data.password,
+      });
 
-      login(data.nim);
+      const result = response.data;
+      // result: { message, user: { name, email }, token }
+
+      login(result.user.name, result.token); // ← name + token
       navigate("/dashboard");
-    } else {
-      alert("NIM atau password anda salah");
+
+    } catch {
+      setError("Email atau password salah.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,17 +56,19 @@ export default function Login() {
             Login
           </h1>
 
+          {error && (
+            <p className="mb-4 text-sm text-red-500 text-center">{error}</p>
+          )}
+
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
 
-            {/* INPUT NIM */}
+            {/* INPUT EMAIL */}
             <input
-              type="text"
-              placeholder="Masukkan NIM"
+              type="email"
+              placeholder="Masukkan Email"  
               className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300"
-              value={data.nim}
-              onChange={(e) =>
-                setData({ ...data, nim: e.target.value })
-              }
+              value={data.email}
+              onChange={(e) => setData({ ...data, email: e.target.value })}
               required
             />
 
@@ -67,22 +78,15 @@ export default function Login() {
               placeholder="Masukkan Password"
               className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300"
               value={data.password}
-              onChange={(e) =>
-                setData({ ...data, password: e.target.value })
-              }
+              onChange={(e) => setData({ ...data, password: e.target.value })}
               required
             />
 
-            {/* BUTTON */}
-            <Button label="Masuk" variant="primary" />
+            <Button label={loading ? "Memuat..." : "Masuk"} variant="primary" />
 
-            {/* REGISTER */}
             <p className="text-sm text-center text-gray-600">
               Belum punya akun?{" "}
-              <Link
-                to="/register"
-                className="text-red-900 font-semibold"
-              >
+              <Link to="/register" className="text-red-900 font-semibold">
                 Registrasi Sekarang
               </Link>
             </p>
